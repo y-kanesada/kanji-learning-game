@@ -208,6 +208,8 @@
     .answer-meaning { margin-top: 10px; color: var(--muted); font-size: 20px; }
     .answer-picture { margin-top: 10px; font-size: 46px; }
     .answer-note { display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 17px; font-weight: 700; }
+    .answer-parts { display: grid; gap: 6px; margin-top: 14px; padding: 14px; border-radius: 8px; color: var(--ink); background: rgba(255, 255, 255, 0.72); font-size: 17px; font-weight: 700; text-align: left; }
+    .answer-parts-title { color: var(--accent-dark); font-weight: 800; }
 
     .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
     .summary-item { padding: 16px 10px; border: 2px solid var(--line); border-radius: 8px; background: #fff; text-align: center; font-size: 17px; font-weight: 800; }
@@ -226,7 +228,7 @@
       .question-meta { text-align: left; }
       .score { text-align: right; }
       .work-area { grid-template-columns: 1.15fr 1fr; }
-      .actions { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .actions { grid-template-columns: repeat(6, minmax(0, 1fr)); }
       .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
   </style>
@@ -240,6 +242,7 @@
       <p class="screen-lead">部首ごとに5問ずつチャレンジしよう。</p>
       <div class="series-grid" id="seriesGrid"></div>
       <button class="wide-button secondary" id="allQuestionsButton" type="button">ぜんぶの問題に挑戦</button>
+      <button class="wide-button secondary hidden" id="resumeButton" type="button">ゲームにもどる</button>
     </section>
 
     <section class="panel hidden" id="gameScreen" aria-live="polite">
@@ -276,6 +279,7 @@
         <button class="action-button secondary" id="backButton" type="button">もどる</button>
         <button class="action-button secondary" id="nextButton" type="button">つぎへ</button>
         <button class="action-button secondary" id="resetButton" type="button">えらびなおす</button>
+        <button class="action-button secondary" id="chooseSeriesButton" type="button">シリーズにもどる</button>
       </div>
 
       <div class="feedback" id="feedback">
@@ -1097,6 +1101,56 @@
   }
 ];
 
+    const seriesDefinitions = {
+      person: { name: "にんべん", meaning: "人や、人の行動に関係する部首だよ。" },
+      water: { name: "さんずい", meaning: "水や液体に関係する部首だよ。" },
+      word: { name: "ごんべん", meaning: "言葉や話すことに関係する部首だよ。" },
+      sun: { name: "ひへん", meaning: "太陽、光、明るさや時間に関係する部首だよ。" },
+      tree: { name: "きへん", meaning: "木や、木からできるものに関係する部首だよ。" },
+      move: { name: "しんにょう", meaning: "進むことや移動に関係する部首だよ。" }
+    };
+
+    const otherPartMeanings = {
+      person_001: "木は、樹木を表すパーツ。人が木のそばで休む形だよ。",
+      person_002: "主は、中心になる人やものを表す字。住では音と形の手がかりにもなるよ。",
+      person_003: "乍は、作の音と形を伝える手がかりになるパーツだよ。",
+      person_004: "吏は、役人を表す字。使では音と形の手がかりになるよ。",
+      person_005: "動は、うごくことを表す字。人が動いて仕事をするイメージだよ。",
+      water_001: "也は、『なり』などと読む字。池では音と形の手がかりになるよ。",
+      water_002: "毎は、いつも・そのたびごとを表す字。海では音と形の手がかりになるよ。",
+      water_003: "肖は、姿が似ることを表す字。消では音と形の手がかりになるよ。",
+      water_004: "㐬は、水が流れる形と音の手がかりになるパーツだよ。",
+      water_005: "先は、前やさきのことを表す字。洗では音と形の手がかりになるよ。",
+      word_001: "舌は、口の中にあり、話すときに使う部分だよ。",
+      word_002: "売は、ものをうることを表す字。読では音と形の手がかりになるよ。",
+      word_003: "己は、自分のことを表す字。記では音と形の手がかりになるよ。",
+      word_004: "吾は、自分・わたしを表す字。語では音と形の手がかりになるよ。",
+      word_005: "十は、数の10を表す字。計の形を作るパーツだよ。",
+      sun_001: "月は、夜空に見える月を表す字。日と月を合わせて明るさを表すよ。",
+      sun_002: "青は、青い色を表す字。太陽と青空で晴れをイメージできるよ。",
+      sun_003: "央は、まんなかを表す字。映では音と形の手がかりになるよ。",
+      sun_004: "爰は、暖の音と形を伝える手がかりになるパーツだよ。",
+      sun_005: "十は、数の10を表す字。早では下側の形を作るパーツだよ。",
+      tree_001: "直は、まっすぐなことを表す字。植では音と形の手がかりになるよ。",
+      tree_002: "目は、ものを見る目を表す字。木と目を合わせた形だよ。",
+      tree_003: "反は、反対や、向きをかえることを表す字。板では音と形の手がかりになるよ。",
+      tree_004: "主は、中心になるものを表す字。柱は建物の中心を支えるものだよ。",
+      tree_005: "艮は、根の音と形を伝える手がかりになるパーツだよ。",
+      move_001: "斤は、おのや重さの単位を表す字。近では音と形の手がかりになるよ。",
+      move_002: "反は、向きをかえることを表す字。元へ返す動きにつながるよ。",
+      move_003: "关は、送の内側の形を作るパーツ。形の手がかりとして覚えよう。",
+      move_004: "隹は、尾の短い鳥を表す字。進では音と形の手がかりになるよ。",
+      move_005: "軍は、兵士の集まりを表す字。運では音と形の手がかりになるよ。"
+    };
+
+    questions.forEach((question) => {
+      const series = seriesDefinitions[question.seriesId];
+      question.seriesName = series.name;
+      question.radicalMeaning = series.meaning;
+      question.otherPart = question.parts[1];
+      question.otherPartMeaning = otherPartMeanings[question.id];
+    });
+
     const seriesOrder = [...new Map(questions.map((question) => [question.seriesId, {
       id: question.seriesId,
       name: question.seriesName,
@@ -1114,6 +1168,7 @@
     let currentQueuePosition = 0;
     let activeTitle = "";
     let baseQueue = [];
+    let seriesReturnTarget = null;
 
     const $ = (id) => document.getElementById(id);
     const seriesScreen = $("seriesScreen");
@@ -1141,6 +1196,8 @@
 
     function renderSeriesScreen() {
       showOnly(seriesScreen);
+      $("resumeButton").classList.toggle("hidden", !seriesReturnTarget);
+      $("resumeButton").textContent = seriesReturnTarget === "summary" ? "結果にもどる" : "ゲームにもどる";
       const grid = $("seriesGrid");
       grid.replaceChildren();
 
@@ -1165,6 +1222,7 @@
     }
 
     function startSeries(seriesId, title) {
+      seriesReturnTarget = null;
       baseQueue = indexesForSeries(seriesId);
       activeQueue = [...baseQueue];
       activeTitle = title;
@@ -1173,6 +1231,7 @@
     }
 
     function startAllQuestions() {
+      seriesReturnTarget = null;
       baseQueue = questions.map((_, index) => index);
       activeQueue = [...baseQueue];
       activeTitle = "ぜんぶの問題";
@@ -1234,6 +1293,11 @@
           <span class="answer-line answer-reading">${question.reading}</span>
           <span class="answer-line answer-meaning">${question.meaning}</span>
           <span class="answer-line answer-picture">${question.picture}</span>
+          <span class="answer-parts">
+            <span class="answer-parts-title">パーツの意味</span>
+            <span>${question.radical}（${question.seriesName}）：${question.radicalMeaning}</span>
+            <span>${question.otherPart}：${question.otherPartMeaning}</span>
+          </span>
           <span class="answer-note">${question.note}</span>
         `;
         sub.textContent = "";
@@ -1386,6 +1450,19 @@
       renderGame();
     }
 
+    function openSeriesScreen(returnTarget) {
+      seriesReturnTarget = returnTarget;
+      renderSeriesScreen();
+    }
+
+    function returnFromSeriesScreen() {
+      if (seriesReturnTarget === "summary") {
+        showSummary();
+      } else if (seriesReturnTarget === "game") {
+        renderGame();
+      }
+    }
+
     function playSound(type) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
@@ -1411,14 +1488,16 @@
     }
 
     $("allQuestionsButton").addEventListener("click", startAllQuestions);
+    $("resumeButton").addEventListener("click", returnFromSeriesScreen);
     $("checkButton").addEventListener("click", checkAnswer);
     $("skipButton").addEventListener("click", skipQuestion);
     $("backButton").addEventListener("click", goBack);
     $("nextButton").addEventListener("click", goNext);
     $("resetButton").addEventListener("click", resetCurrent);
+    $("chooseSeriesButton").addEventListener("click", () => openSeriesScreen("game"));
     $("retryButton").addEventListener("click", startReview);
     $("replayButton").addEventListener("click", replayCurrentSet);
-    $("seriesButton").addEventListener("click", renderSeriesScreen);
+    $("seriesButton").addEventListener("click", () => openSeriesScreen("summary"));
 
     renderSeriesScreen();
   </script>
