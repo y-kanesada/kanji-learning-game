@@ -1,0 +1,782 @@
+[
+  {
+    "id": "person_001",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 1,
+    "kanji": "休",
+    "word": "休む",
+    "reading": "やすむ",
+    "okurigana": "む",
+    "meaning": "体や心をゆっくりさせる。",
+    "parts": [
+      "亻",
+      "木"
+    ],
+    "choices": [
+      "亻",
+      "木",
+      "日",
+      "水",
+      "言"
+    ],
+    "picture": "😴🌳",
+    "hint": "人が木のそばで休むイメージだよ。",
+    "note": "にんべんは人に関係することを表す。"
+  },
+  {
+    "id": "person_002",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 3,
+    "kanji": "住",
+    "word": "住む",
+    "reading": "すむ",
+    "okurigana": "む",
+    "meaning": "家や場所でくらす。",
+    "parts": [
+      "亻",
+      "主"
+    ],
+    "choices": [
+      "亻",
+      "主",
+      "木",
+      "青",
+      "車"
+    ],
+    "picture": "🏠",
+    "hint": "人がある場所でくらす漢字だよ。",
+    "note": "右の主は形の手がかりとして使う。"
+  },
+  {
+    "id": "person_003",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 2,
+    "kanji": "作",
+    "word": "作る",
+    "reading": "つくる",
+    "okurigana": "る",
+    "meaning": "ものをつくる。",
+    "parts": [
+      "亻",
+      "乍"
+    ],
+    "choices": [
+      "亻",
+      "乍",
+      "木",
+      "月",
+      "寺"
+    ],
+    "picture": "🛠️",
+    "hint": "人が何かをつくるイメージだよ。",
+    "note": "乍は意味説明よりも形の手がかりとして扱う。"
+  },
+  {
+    "id": "person_004",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 3,
+    "kanji": "使",
+    "word": "使う",
+    "reading": "つかう",
+    "okurigana": "う",
+    "meaning": "道具や力を役に立てる。",
+    "parts": [
+      "亻",
+      "吏"
+    ],
+    "choices": [
+      "亻",
+      "吏",
+      "毎",
+      "反",
+      "青"
+    ],
+    "picture": "🧰",
+    "hint": "人が道具を使うイメージだよ。",
+    "note": "吏は形の手がかりとして扱う。"
+  },
+  {
+    "id": "person_005",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 4,
+    "kanji": "働",
+    "word": "働く",
+    "reading": "はたらく",
+    "okurigana": "く",
+    "meaning": "仕事をする。体や頭を動かす。",
+    "parts": [
+      "亻",
+      "動"
+    ],
+    "choices": [
+      "亻",
+      "動",
+      "木",
+      "青",
+      "反"
+    ],
+    "picture": "👷",
+    "hint": "人と動くを合わせるよ。",
+    "note": "部品の動も小学校配当漢字で理解しやすい。"
+  },
+  {
+    "id": "water_001",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 2,
+    "kanji": "池",
+    "word": "池",
+    "reading": "いけ",
+    "okurigana": "",
+    "meaning": "水がたまっているところ。",
+    "parts": [
+      "氵",
+      "也"
+    ],
+    "choices": [
+      "氵",
+      "也",
+      "亻",
+      "日",
+      "木"
+    ],
+    "picture": "🏞️",
+    "hint": "さんずいは水に関係するよ。",
+    "note": "送り仮名はないが、水シリーズ導入として有用。"
+  },
+  {
+    "id": "water_002",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 2,
+    "kanji": "海",
+    "word": "海",
+    "reading": "うみ",
+    "okurigana": "",
+    "meaning": "広く大きな水の場所。",
+    "parts": [
+      "氵",
+      "毎"
+    ],
+    "choices": [
+      "氵",
+      "毎",
+      "亻",
+      "青",
+      "車"
+    ],
+    "picture": "🌊",
+    "hint": "水に関係するさんずいを使うよ。",
+    "note": "送り仮名はないが、意味と部首の結び付きが強い。"
+  },
+  {
+    "id": "water_003",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 3,
+    "kanji": "消",
+    "word": "消す",
+    "reading": "けす",
+    "okurigana": "す",
+    "meaning": "見えなくする。火や文字をなくす。",
+    "parts": [
+      "氵",
+      "肖"
+    ],
+    "choices": [
+      "氵",
+      "肖",
+      "亻",
+      "言",
+      "木"
+    ],
+    "picture": "🧯",
+    "hint": "水で火を消すイメージだよ。",
+    "note": "肖は形の手がかりとして扱う。"
+  },
+  {
+    "id": "water_004",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 3,
+    "kanji": "流",
+    "word": "流す",
+    "reading": "ながす",
+    "okurigana": "す",
+    "meaning": "水などを動かして行かせる。",
+    "parts": [
+      "氵",
+      "㐬"
+    ],
+    "choices": [
+      "氵",
+      "㐬",
+      "日",
+      "木",
+      "言"
+    ],
+    "picture": "🚰",
+    "hint": "水が流れるイメージだよ。",
+    "note": "右側は形の手がかりとして扱う。"
+  },
+  {
+    "id": "water_005",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 6,
+    "kanji": "洗",
+    "word": "洗う",
+    "reading": "あらう",
+    "okurigana": "う",
+    "meaning": "水できれいにする。",
+    "parts": [
+      "氵",
+      "先"
+    ],
+    "choices": [
+      "氵",
+      "先",
+      "亻",
+      "月",
+      "車"
+    ],
+    "picture": "🧼",
+    "hint": "水できれいにする漢字だよ。",
+    "note": "先は小学校配当漢字で形を認識しやすい。"
+  },
+  {
+    "id": "word_001",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "話",
+    "word": "話す",
+    "reading": "はなす",
+    "okurigana": "す",
+    "meaning": "言葉で伝える。",
+    "parts": [
+      "言",
+      "舌"
+    ],
+    "choices": [
+      "言",
+      "舌",
+      "氵",
+      "木",
+      "日"
+    ],
+    "picture": "🗣️",
+    "hint": "言葉に関係する言を使うよ。",
+    "note": "舌は話す動作と結び付けやすい。"
+  },
+  {
+    "id": "word_002",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "読",
+    "word": "読む",
+    "reading": "よむ",
+    "okurigana": "む",
+    "meaning": "文字や文章を見る。",
+    "parts": [
+      "言",
+      "売"
+    ],
+    "choices": [
+      "言",
+      "売",
+      "亻",
+      "青",
+      "反"
+    ],
+    "picture": "📖",
+    "hint": "言葉や文字に関係する漢字だよ。",
+    "note": "売は形の手がかりとして扱う。"
+  },
+  {
+    "id": "word_003",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "記",
+    "word": "記す",
+    "reading": "しるす",
+    "okurigana": "す",
+    "meaning": "文字で書き残す。",
+    "parts": [
+      "言",
+      "己"
+    ],
+    "choices": [
+      "言",
+      "己",
+      "氵",
+      "木",
+      "車"
+    ],
+    "picture": "✍️",
+    "hint": "言葉を書き残すイメージだよ。",
+    "note": "記すは日常語としてやや硬いので、補足表示で『書く』も出すとよい。"
+  },
+  {
+    "id": "word_004",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "語",
+    "word": "語る",
+    "reading": "かたる",
+    "okurigana": "る",
+    "meaning": "言葉で話す。",
+    "parts": [
+      "言",
+      "吾"
+    ],
+    "choices": [
+      "言",
+      "吾",
+      "氵",
+      "木",
+      "日"
+    ],
+    "picture": "💬",
+    "hint": "言葉に関係する言を使うよ。",
+    "note": "語るは語彙学習につなげやすい。"
+  },
+  {
+    "id": "word_005",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "計",
+    "word": "計る",
+    "reading": "はかる",
+    "okurigana": "る",
+    "meaning": "数や時間などを調べる。",
+    "parts": [
+      "言",
+      "十"
+    ],
+    "choices": [
+      "言",
+      "十",
+      "亻",
+      "水",
+      "木"
+    ],
+    "picture": "📏",
+    "hint": "数を調べる言葉として覚えよう。",
+    "note": "『測る』『量る』との違いは後の段階で扱う。"
+  },
+  {
+    "id": "sun_001",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 2,
+    "kanji": "明",
+    "word": "明るい",
+    "reading": "あかるい",
+    "okurigana": "るい",
+    "meaning": "光があってよく見える。",
+    "parts": [
+      "日",
+      "月"
+    ],
+    "choices": [
+      "日",
+      "月",
+      "氵",
+      "亻",
+      "木"
+    ],
+    "picture": "🌞",
+    "hint": "日と月で明るいイメージだよ。",
+    "note": "形と意味の結び付きが非常に分かりやすい。"
+  },
+  {
+    "id": "sun_002",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 2,
+    "kanji": "晴",
+    "word": "晴れる",
+    "reading": "はれる",
+    "okurigana": "れる",
+    "meaning": "空が明るく、よい天気になる。",
+    "parts": [
+      "日",
+      "青"
+    ],
+    "choices": [
+      "日",
+      "青",
+      "氵",
+      "木",
+      "言"
+    ],
+    "picture": "☀️",
+    "hint": "太陽と青空のイメージだよ。",
+    "note": "天気と日へんの関係を理解しやすい。"
+  },
+  {
+    "id": "sun_003",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 6,
+    "kanji": "映",
+    "word": "映る",
+    "reading": "うつる",
+    "okurigana": "る",
+    "meaning": "光や画面に姿が見える。",
+    "parts": [
+      "日",
+      "央"
+    ],
+    "choices": [
+      "日",
+      "央",
+      "氵",
+      "亻",
+      "車"
+    ],
+    "picture": "🪞",
+    "hint": "光で姿が見えるイメージだよ。",
+    "note": "央は形の手がかりとして扱う。"
+  },
+  {
+    "id": "sun_004",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 6,
+    "kanji": "暖",
+    "word": "暖まる",
+    "reading": "あたたまる",
+    "okurigana": "まる",
+    "meaning": "あたたかくなる。",
+    "parts": [
+      "日",
+      "爰"
+    ],
+    "choices": [
+      "日",
+      "爰",
+      "氵",
+      "木",
+      "言"
+    ],
+    "picture": "🔥☀️",
+    "hint": "太陽のあたたかさをイメージしよう。",
+    "note": "爰は難しいため、初期は形合わせ中心にする。"
+  },
+  {
+    "id": "sun_005",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 1,
+    "kanji": "早",
+    "word": "早い",
+    "reading": "はやい",
+    "okurigana": "い",
+    "meaning": "時間が前である。すぐである。",
+    "parts": [
+      "日",
+      "十"
+    ],
+    "choices": [
+      "日",
+      "十",
+      "亻",
+      "氵",
+      "木"
+    ],
+    "picture": "⏰",
+    "hint": "日が出る時間をイメージしよう。",
+    "note": "厳密な部首分解より形の学習として扱う。"
+  },
+  {
+    "id": "tree_001",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "植",
+    "word": "植える",
+    "reading": "うえる",
+    "okurigana": "える",
+    "meaning": "草や木を土に入れて育てる。",
+    "parts": [
+      "木",
+      "直"
+    ],
+    "choices": [
+      "木",
+      "直",
+      "氵",
+      "言",
+      "日"
+    ],
+    "picture": "🌱",
+    "hint": "木や植物に関係する木へんを使うよ。",
+    "note": "直は小学校配当漢字で形を認識しやすい。"
+  },
+  {
+    "id": "tree_002",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "相",
+    "word": "相手",
+    "reading": "あいて",
+    "okurigana": "",
+    "meaning": "いっしょに何かをする人。",
+    "parts": [
+      "木",
+      "目"
+    ],
+    "choices": [
+      "木",
+      "目",
+      "氵",
+      "亻",
+      "車"
+    ],
+    "picture": "🤝",
+    "hint": "木と目を合わせた形だよ。",
+    "note": "送り仮名はないが、形が分かりやすく語彙として有用。"
+  },
+  {
+    "id": "tree_003",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "板",
+    "word": "板",
+    "reading": "いた",
+    "okurigana": "",
+    "meaning": "平たく切った木。",
+    "parts": [
+      "木",
+      "反"
+    ],
+    "choices": [
+      "木",
+      "反",
+      "氵",
+      "日",
+      "言"
+    ],
+    "picture": "🪵",
+    "hint": "木からできるものだよ。",
+    "note": "送り仮名はないが、木へんの意味が明確。"
+  },
+  {
+    "id": "tree_004",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "柱",
+    "word": "柱",
+    "reading": "はしら",
+    "okurigana": "",
+    "meaning": "家などを支える太い木や材料。",
+    "parts": [
+      "木",
+      "主"
+    ],
+    "choices": [
+      "木",
+      "主",
+      "氵",
+      "亻",
+      "日"
+    ],
+    "picture": "🏛️",
+    "hint": "木でできた支えるものをイメージしよう。",
+    "note": "送り仮名はないが、部首の意味が分かりやすい。"
+  },
+  {
+    "id": "tree_005",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "根",
+    "word": "根づく",
+    "reading": "ねづく",
+    "okurigana": "づく",
+    "meaning": "植物の根がしっかりつく。",
+    "parts": [
+      "木",
+      "艮"
+    ],
+    "choices": [
+      "木",
+      "艮",
+      "氵",
+      "言",
+      "日"
+    ],
+    "picture": "🌳",
+    "hint": "木や植物の下にある部分だよ。",
+    "note": "艮は難しいため、初期は形合わせ中心にする。"
+  },
+  {
+    "id": "move_001",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 2,
+    "kanji": "近",
+    "word": "近い",
+    "reading": "ちかい",
+    "okurigana": "い",
+    "meaning": "距離や時間が短い。",
+    "parts": [
+      "辶",
+      "斤"
+    ],
+    "choices": [
+      "辶",
+      "斤",
+      "亻",
+      "氵",
+      "木"
+    ],
+    "picture": "📍",
+    "hint": "しんにょうは進む・移動に関係することが多いよ。",
+    "note": "斤は形の手がかりとして扱う。"
+  },
+  {
+    "id": "move_002",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "返",
+    "word": "返す",
+    "reading": "かえす",
+    "okurigana": "す",
+    "meaning": "元の場所や人に戻す。",
+    "parts": [
+      "辶",
+      "反"
+    ],
+    "choices": [
+      "辶",
+      "反",
+      "亻",
+      "言",
+      "日"
+    ],
+    "picture": "↩️",
+    "hint": "戻る動きのイメージだよ。",
+    "note": "反は形の手がかりとして扱う。"
+  },
+  {
+    "id": "move_003",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "送",
+    "word": "送る",
+    "reading": "おくる",
+    "okurigana": "る",
+    "meaning": "人や物を別の場所へ行かせる。",
+    "parts": [
+      "辶",
+      "关"
+    ],
+    "choices": [
+      "辶",
+      "关",
+      "亻",
+      "氵",
+      "木"
+    ],
+    "picture": "📦",
+    "hint": "物を動かして届けるイメージだよ。",
+    "note": "右側は形の手がかりとして扱う。"
+  },
+  {
+    "id": "move_004",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "進",
+    "word": "進む",
+    "reading": "すすむ",
+    "okurigana": "む",
+    "meaning": "前の方へ動く。",
+    "parts": [
+      "辶",
+      "隹"
+    ],
+    "choices": [
+      "辶",
+      "隹",
+      "亻",
+      "日",
+      "木"
+    ],
+    "picture": "➡️",
+    "hint": "前へ進む動きのイメージだよ。",
+    "note": "隹は難しいため、初期は形合わせ中心にする。"
+  },
+  {
+    "id": "move_005",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "運",
+    "word": "運ぶ",
+    "reading": "はこぶ",
+    "okurigana": "ぶ",
+    "meaning": "物を別の場所へ持っていく。",
+    "parts": [
+      "辶",
+      "軍"
+    ],
+    "choices": [
+      "辶",
+      "軍",
+      "亻",
+      "氵",
+      "言"
+    ],
+    "picture": "🚚",
+    "hint": "物が移動するイメージだよ。",
+    "note": "軍は小学校配当漢字で形を認識しやすい。"
+  }
+]

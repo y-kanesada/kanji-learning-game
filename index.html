@@ -1,0 +1,1427 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漢字パーツ学習ゲーム</title>
+  <style>
+    :root {
+      --bg: #f3f8f5;
+      --panel: #ffffff;
+      --ink: #24312c;
+      --muted: #607069;
+      --accent: #087f67;
+      --accent-dark: #075b4b;
+      --soft: #e4f4ed;
+      --sun: #f5b642;
+      --gentle: #fff1bf;
+      --wrong: #fff0e9;
+      --line: #c9ddd4;
+      --shadow: 0 12px 30px rgba(28, 67, 53, 0.11);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: linear-gradient(145deg, #f3f8f5, #edf5fb);
+      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+    }
+
+    button { font: inherit; }
+
+    .shell {
+      width: min(1040px, 100%);
+      margin: 0 auto;
+      padding: 20px 14px 40px;
+    }
+
+    .app-title {
+      margin: 0 0 16px;
+      color: #17483a;
+      font-size: clamp(30px, 6vw, 46px);
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .panel {
+      padding: clamp(18px, 4vw, 32px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow);
+    }
+
+    .hidden { display: none !important; }
+
+    .screen-heading {
+      margin: 0;
+      font-size: clamp(28px, 6vw, 42px);
+      text-align: center;
+    }
+
+    .screen-lead {
+      margin: 8px 0 22px;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .series-button {
+      min-height: 130px;
+      padding: 18px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: 0 3px 0 #bed4cb;
+    }
+
+    .series-button:active { transform: translateY(1px); }
+
+    .series-button.complete {
+      border-color: #e7ae37;
+      background: #fff9df;
+      box-shadow: 0 3px 0 #e7ae37;
+    }
+
+    .series-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .series-name { font-size: 23px; font-weight: 800; }
+    .series-radical { color: var(--accent-dark); font-size: 40px; font-weight: 800; }
+    .series-progress { display: block; margin-top: 10px; color: var(--muted); font-size: 17px; font-weight: 700; }
+    .badge-mark { color: #805c00; font-size: 17px; font-weight: 800; }
+
+    .wide-button,
+    .action-button {
+      min-height: 60px;
+      border: 0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .wide-button { width: 100%; margin-top: 14px; }
+    button:disabled { cursor: not-allowed; opacity: 0.45; }
+    button:focus-visible { outline: 4px solid #f2c75c; outline-offset: 3px; }
+
+    .primary { color: #fff; background: var(--accent); box-shadow: 0 4px 0 var(--accent-dark); }
+    .secondary { color: var(--accent-dark); background: #fff; border: 2px solid var(--line); box-shadow: 0 3px 0 #bed4cb; }
+    .gentle { color: #5b4209; background: var(--gentle); box-shadow: 0 3px 0 #ddbd57; }
+
+    .game-topbar {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .question-meta,
+    .score { color: var(--muted); font-size: 18px; font-weight: 800; text-align: center; }
+
+    .meter { height: 13px; overflow: hidden; border-radius: 999px; background: #dce9e3; }
+    .meter-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--sun)); transition: width 180ms ease; }
+
+    .prompt {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--soft);
+      text-align: center;
+    }
+
+    .prompt-label { margin: 0; color: var(--muted); font-size: 18px; font-weight: 800; }
+    .reading { margin: 8px 0 0; font-size: clamp(40px, 11vw, 76px); font-weight: 800; line-height: 1.2; }
+    .grade-label { margin: 8px 0 0; color: var(--muted); font-size: 17px; font-weight: 700; }
+
+    .work-area { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 20px; }
+    .section-title { margin: 0 0 10px; color: var(--muted); font-size: 20px; font-weight: 800; }
+    .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 10px; }
+
+    .part-button {
+      min-height: 88px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: #fff;
+      font-size: 40px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #bed4cb;
+    }
+
+    .part-button.selected { border-color: var(--accent); color: var(--accent-dark); background: #dcf5eb; box-shadow: 0 3px 0 #83c8b5; }
+    .selected-parts { display: grid; grid-template-columns: 1fr 45px 1fr; gap: 8px; align-items: center; }
+
+    .slot {
+      min-height: 110px;
+      display: grid;
+      place-items: center;
+      border: 3px dashed var(--line);
+      border-radius: 8px;
+      background: #fbfffd;
+      font-size: 50px;
+      font-weight: 800;
+    }
+
+    .plus { color: var(--muted); font-size: 34px; font-weight: 800; text-align: center; }
+    .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+
+    .feedback {
+      min-height: 120px;
+      margin-top: 18px;
+      padding: 18px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .feedback.correct { border-color: #75cba9; background: #e4f9ef; }
+    .feedback.wrong { border-color: #e8ad99; background: var(--wrong); }
+    .feedback-main { margin: 0; font-size: clamp(25px, 7vw, 42px); font-weight: 800; line-height: 1.35; }
+    .feedback-sub { margin: 8px 0 0; color: var(--muted); font-size: 20px; line-height: 1.55; }
+    .answer-line { display: block; }
+    .answer-kanji { font-size: clamp(54px, 13vw, 82px); line-height: 1.05; }
+    .answer-word { margin-top: 8px; color: var(--accent-dark); font-size: clamp(30px, 8vw, 46px); }
+    .answer-reading { margin-top: 4px; font-size: clamp(23px, 6vw, 32px); }
+    .answer-meaning { margin-top: 10px; color: var(--muted); font-size: 20px; }
+    .answer-picture { margin-top: 10px; font-size: 46px; }
+    .answer-note { display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 17px; font-weight: 700; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .summary-item { padding: 16px 10px; border: 2px solid var(--line); border-radius: 8px; background: #fff; text-align: center; font-size: 17px; font-weight: 800; }
+    .summary-number { display: block; color: var(--accent-dark); font-size: 40px; line-height: 1.1; }
+    .badge-section { margin-top: 24px; }
+    .badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; }
+    .badge-item { padding: 14px; border: 2px solid var(--line); border-radius: 8px; color: var(--muted); background: #f7faf8; text-align: center; font-size: 16px; font-weight: 800; }
+    .badge-item.complete { border-color: #e3ae38; color: #694c00; background: #fff7d4; }
+    .badge-icon { display: block; margin-bottom: 4px; font-size: 30px; }
+    .review-list { display: grid; gap: 9px; margin-top: 10px; }
+    .review-button { min-height: 58px; padding: 12px 16px; border: 2px solid var(--line); border-radius: 8px; color: var(--ink); background: #fff; font-size: 18px; font-weight: 800; text-align: left; cursor: pointer; }
+
+    @media (min-width: 760px) {
+      .shell { padding-top: 28px; }
+      .game-topbar { grid-template-columns: 190px 1fr 230px; }
+      .question-meta { text-align: left; }
+      .score { text-align: right; }
+      .work-area { grid-template-columns: 1.15fr 1fr; }
+      .actions { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <h1 class="app-title">漢字パーツ学習ゲーム</h1>
+
+    <section class="panel" id="seriesScreen">
+      <h2 class="screen-heading">シリーズをえらぼう</h2>
+      <p class="screen-lead">部首ごとに5問ずつチャレンジしよう。</p>
+      <div class="series-grid" id="seriesGrid"></div>
+      <button class="wide-button secondary" id="allQuestionsButton" type="button">ぜんぶの問題に挑戦</button>
+    </section>
+
+    <section class="panel hidden" id="gameScreen" aria-live="polite">
+      <div class="game-topbar">
+        <div class="question-meta" id="questionMeta"></div>
+        <div class="meter" aria-hidden="true"><div class="meter-fill" id="meterFill"></div></div>
+        <div class="score" id="scoreText"></div>
+      </div>
+
+      <div class="prompt">
+        <p class="prompt-label">この読みの漢字を、パーツ2つで作ろう</p>
+        <p class="reading" id="readingText"></p>
+        <p class="grade-label" id="gradeText"></p>
+      </div>
+
+      <div class="work-area">
+        <section>
+          <p class="section-title">パーツ候補</p>
+          <div class="choices" id="choices"></div>
+        </section>
+        <section>
+          <p class="section-title">選んだパーツ</p>
+          <div class="selected-parts">
+            <div class="slot" id="slotA">?</div>
+            <div class="plus">+</div>
+            <div class="slot" id="slotB">?</div>
+          </div>
+        </section>
+      </div>
+
+      <div class="actions">
+        <button class="action-button primary" id="checkButton" type="button">こたえあわせ</button>
+        <button class="action-button gentle" id="skipButton" type="button">わからない</button>
+        <button class="action-button secondary" id="backButton" type="button">もどる</button>
+        <button class="action-button secondary" id="nextButton" type="button">つぎへ</button>
+        <button class="action-button secondary" id="resetButton" type="button">えらびなおす</button>
+      </div>
+
+      <div class="feedback" id="feedback">
+        <p class="feedback-main" id="feedbackMain">パーツを選んでみよう</p>
+        <p class="feedback-sub" id="feedbackSub">2つ選んだら「こたえあわせ」を押してね。</p>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="summaryScreen" aria-live="polite">
+      <h2 class="screen-heading">結果</h2>
+      <p class="screen-lead" id="summaryTitle"></p>
+      <div class="summary-grid">
+        <div class="summary-item"><span class="summary-number" id="correctCount">0</span>正解</div>
+        <div class="summary-item"><span class="summary-number" id="wrongCount">0</span>不正解</div>
+        <div class="summary-item"><span class="summary-number" id="skippedCount">0</span>わからない</div>
+        <div class="summary-item"><span class="summary-number" id="unansweredCount">0</span>未回答</div>
+      </div>
+
+      <div class="actions" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <button class="action-button primary" id="retryButton" type="button">復習する</button>
+        <button class="action-button secondary" id="replayButton" type="button">もう一度やる</button>
+        <button class="action-button secondary" id="seriesButton" type="button">シリーズを選ぶ</button>
+      </div>
+
+      <section class="badge-section">
+        <p class="section-title">シリーズ達成バッジ</p>
+        <div class="badge-grid" id="badgeGrid"></div>
+      </section>
+
+      <section class="badge-section">
+        <p class="section-title">復習する問題</p>
+        <div class="review-list" id="reviewList"></div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    // kanji-data-v1.0.jsonの内容を埋め込み、ファイルを直接開いても動くようにしています。
+    const questions = [
+  {
+    "id": "person_001",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 1,
+    "kanji": "休",
+    "word": "休む",
+    "reading": "やすむ",
+    "okurigana": "む",
+    "meaning": "体や心をゆっくりさせる。",
+    "parts": [
+      "亻",
+      "木"
+    ],
+    "choices": [
+      "亻",
+      "木",
+      "日",
+      "水",
+      "言"
+    ],
+    "picture": "😴🌳",
+    "hint": "人が木のそばで休むイメージだよ。",
+    "note": "にんべんは人に関係することを表す。"
+  },
+  {
+    "id": "person_002",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 3,
+    "kanji": "住",
+    "word": "住む",
+    "reading": "すむ",
+    "okurigana": "む",
+    "meaning": "家や場所でくらす。",
+    "parts": [
+      "亻",
+      "主"
+    ],
+    "choices": [
+      "亻",
+      "主",
+      "木",
+      "青",
+      "車"
+    ],
+    "picture": "🏠",
+    "hint": "人がある場所でくらす漢字だよ。",
+    "note": "右の主は形の手がかりとして使う。"
+  },
+  {
+    "id": "person_003",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 2,
+    "kanji": "作",
+    "word": "作る",
+    "reading": "つくる",
+    "okurigana": "る",
+    "meaning": "ものをつくる。",
+    "parts": [
+      "亻",
+      "乍"
+    ],
+    "choices": [
+      "亻",
+      "乍",
+      "木",
+      "月",
+      "寺"
+    ],
+    "picture": "🛠️",
+    "hint": "人が何かをつくるイメージだよ。",
+    "note": "乍は意味説明よりも形の手がかりとして扱う。"
+  },
+  {
+    "id": "person_004",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 3,
+    "kanji": "使",
+    "word": "使う",
+    "reading": "つかう",
+    "okurigana": "う",
+    "meaning": "道具や力を役に立てる。",
+    "parts": [
+      "亻",
+      "吏"
+    ],
+    "choices": [
+      "亻",
+      "吏",
+      "毎",
+      "反",
+      "青"
+    ],
+    "picture": "🧰",
+    "hint": "人が道具を使うイメージだよ。",
+    "note": "吏は形の手がかりとして扱う。"
+  },
+  {
+    "id": "person_005",
+    "seriesId": "person",
+    "seriesName": "人シリーズ",
+    "radical": "亻",
+    "grade": 4,
+    "kanji": "働",
+    "word": "働く",
+    "reading": "はたらく",
+    "okurigana": "く",
+    "meaning": "仕事をする。体や頭を動かす。",
+    "parts": [
+      "亻",
+      "動"
+    ],
+    "choices": [
+      "亻",
+      "動",
+      "木",
+      "青",
+      "反"
+    ],
+    "picture": "👷",
+    "hint": "人と動くを合わせるよ。",
+    "note": "部品の動も小学校配当漢字で理解しやすい。"
+  },
+  {
+    "id": "water_001",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 2,
+    "kanji": "池",
+    "word": "池",
+    "reading": "いけ",
+    "okurigana": "",
+    "meaning": "水がたまっているところ。",
+    "parts": [
+      "氵",
+      "也"
+    ],
+    "choices": [
+      "氵",
+      "也",
+      "亻",
+      "日",
+      "木"
+    ],
+    "picture": "🏞️",
+    "hint": "さんずいは水に関係するよ。",
+    "note": "送り仮名はないが、水シリーズ導入として有用。"
+  },
+  {
+    "id": "water_002",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 2,
+    "kanji": "海",
+    "word": "海",
+    "reading": "うみ",
+    "okurigana": "",
+    "meaning": "広く大きな水の場所。",
+    "parts": [
+      "氵",
+      "毎"
+    ],
+    "choices": [
+      "氵",
+      "毎",
+      "亻",
+      "青",
+      "車"
+    ],
+    "picture": "🌊",
+    "hint": "水に関係するさんずいを使うよ。",
+    "note": "送り仮名はないが、意味と部首の結び付きが強い。"
+  },
+  {
+    "id": "water_003",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 3,
+    "kanji": "消",
+    "word": "消す",
+    "reading": "けす",
+    "okurigana": "す",
+    "meaning": "見えなくする。火や文字をなくす。",
+    "parts": [
+      "氵",
+      "肖"
+    ],
+    "choices": [
+      "氵",
+      "肖",
+      "亻",
+      "言",
+      "木"
+    ],
+    "picture": "🧯",
+    "hint": "水で火を消すイメージだよ。",
+    "note": "肖は形の手がかりとして扱う。"
+  },
+  {
+    "id": "water_004",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 3,
+    "kanji": "流",
+    "word": "流す",
+    "reading": "ながす",
+    "okurigana": "す",
+    "meaning": "水などを動かして行かせる。",
+    "parts": [
+      "氵",
+      "㐬"
+    ],
+    "choices": [
+      "氵",
+      "㐬",
+      "日",
+      "木",
+      "言"
+    ],
+    "picture": "🚰",
+    "hint": "水が流れるイメージだよ。",
+    "note": "右側は形の手がかりとして扱う。"
+  },
+  {
+    "id": "water_005",
+    "seriesId": "water",
+    "seriesName": "水シリーズ",
+    "radical": "氵",
+    "grade": 6,
+    "kanji": "洗",
+    "word": "洗う",
+    "reading": "あらう",
+    "okurigana": "う",
+    "meaning": "水できれいにする。",
+    "parts": [
+      "氵",
+      "先"
+    ],
+    "choices": [
+      "氵",
+      "先",
+      "亻",
+      "月",
+      "車"
+    ],
+    "picture": "🧼",
+    "hint": "水できれいにする漢字だよ。",
+    "note": "先は小学校配当漢字で形を認識しやすい。"
+  },
+  {
+    "id": "word_001",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "話",
+    "word": "話す",
+    "reading": "はなす",
+    "okurigana": "す",
+    "meaning": "言葉で伝える。",
+    "parts": [
+      "言",
+      "舌"
+    ],
+    "choices": [
+      "言",
+      "舌",
+      "氵",
+      "木",
+      "日"
+    ],
+    "picture": "🗣️",
+    "hint": "言葉に関係する言を使うよ。",
+    "note": "舌は話す動作と結び付けやすい。"
+  },
+  {
+    "id": "word_002",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "読",
+    "word": "読む",
+    "reading": "よむ",
+    "okurigana": "む",
+    "meaning": "文字や文章を見る。",
+    "parts": [
+      "言",
+      "売"
+    ],
+    "choices": [
+      "言",
+      "売",
+      "亻",
+      "青",
+      "反"
+    ],
+    "picture": "📖",
+    "hint": "言葉や文字に関係する漢字だよ。",
+    "note": "売は形の手がかりとして扱う。"
+  },
+  {
+    "id": "word_003",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "記",
+    "word": "記す",
+    "reading": "しるす",
+    "okurigana": "す",
+    "meaning": "文字で書き残す。",
+    "parts": [
+      "言",
+      "己"
+    ],
+    "choices": [
+      "言",
+      "己",
+      "氵",
+      "木",
+      "車"
+    ],
+    "picture": "✍️",
+    "hint": "言葉を書き残すイメージだよ。",
+    "note": "記すは日常語としてやや硬いので、補足表示で『書く』も出すとよい。"
+  },
+  {
+    "id": "word_004",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "語",
+    "word": "語る",
+    "reading": "かたる",
+    "okurigana": "る",
+    "meaning": "言葉で話す。",
+    "parts": [
+      "言",
+      "吾"
+    ],
+    "choices": [
+      "言",
+      "吾",
+      "氵",
+      "木",
+      "日"
+    ],
+    "picture": "💬",
+    "hint": "言葉に関係する言を使うよ。",
+    "note": "語るは語彙学習につなげやすい。"
+  },
+  {
+    "id": "word_005",
+    "seriesId": "word",
+    "seriesName": "言葉シリーズ",
+    "radical": "言",
+    "grade": 2,
+    "kanji": "計",
+    "word": "計る",
+    "reading": "はかる",
+    "okurigana": "る",
+    "meaning": "数や時間などを調べる。",
+    "parts": [
+      "言",
+      "十"
+    ],
+    "choices": [
+      "言",
+      "十",
+      "亻",
+      "水",
+      "木"
+    ],
+    "picture": "📏",
+    "hint": "数を調べる言葉として覚えよう。",
+    "note": "『測る』『量る』との違いは後の段階で扱う。"
+  },
+  {
+    "id": "sun_001",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 2,
+    "kanji": "明",
+    "word": "明るい",
+    "reading": "あかるい",
+    "okurigana": "るい",
+    "meaning": "光があってよく見える。",
+    "parts": [
+      "日",
+      "月"
+    ],
+    "choices": [
+      "日",
+      "月",
+      "氵",
+      "亻",
+      "木"
+    ],
+    "picture": "🌞",
+    "hint": "日と月で明るいイメージだよ。",
+    "note": "形と意味の結び付きが非常に分かりやすい。"
+  },
+  {
+    "id": "sun_002",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 2,
+    "kanji": "晴",
+    "word": "晴れる",
+    "reading": "はれる",
+    "okurigana": "れる",
+    "meaning": "空が明るく、よい天気になる。",
+    "parts": [
+      "日",
+      "青"
+    ],
+    "choices": [
+      "日",
+      "青",
+      "氵",
+      "木",
+      "言"
+    ],
+    "picture": "☀️",
+    "hint": "太陽と青空のイメージだよ。",
+    "note": "天気と日へんの関係を理解しやすい。"
+  },
+  {
+    "id": "sun_003",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 6,
+    "kanji": "映",
+    "word": "映る",
+    "reading": "うつる",
+    "okurigana": "る",
+    "meaning": "光や画面に姿が見える。",
+    "parts": [
+      "日",
+      "央"
+    ],
+    "choices": [
+      "日",
+      "央",
+      "氵",
+      "亻",
+      "車"
+    ],
+    "picture": "🪞",
+    "hint": "光で姿が見えるイメージだよ。",
+    "note": "央は形の手がかりとして扱う。"
+  },
+  {
+    "id": "sun_004",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 6,
+    "kanji": "暖",
+    "word": "暖まる",
+    "reading": "あたたまる",
+    "okurigana": "まる",
+    "meaning": "あたたかくなる。",
+    "parts": [
+      "日",
+      "爰"
+    ],
+    "choices": [
+      "日",
+      "爰",
+      "氵",
+      "木",
+      "言"
+    ],
+    "picture": "🔥☀️",
+    "hint": "太陽のあたたかさをイメージしよう。",
+    "note": "爰は難しいため、初期は形合わせ中心にする。"
+  },
+  {
+    "id": "sun_005",
+    "seriesId": "sun",
+    "seriesName": "日シリーズ",
+    "radical": "日",
+    "grade": 1,
+    "kanji": "早",
+    "word": "早い",
+    "reading": "はやい",
+    "okurigana": "い",
+    "meaning": "時間が前である。すぐである。",
+    "parts": [
+      "日",
+      "十"
+    ],
+    "choices": [
+      "日",
+      "十",
+      "亻",
+      "氵",
+      "木"
+    ],
+    "picture": "⏰",
+    "hint": "日が出る時間をイメージしよう。",
+    "note": "厳密な部首分解より形の学習として扱う。"
+  },
+  {
+    "id": "tree_001",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "植",
+    "word": "植える",
+    "reading": "うえる",
+    "okurigana": "える",
+    "meaning": "草や木を土に入れて育てる。",
+    "parts": [
+      "木",
+      "直"
+    ],
+    "choices": [
+      "木",
+      "直",
+      "氵",
+      "言",
+      "日"
+    ],
+    "picture": "🌱",
+    "hint": "木や植物に関係する木へんを使うよ。",
+    "note": "直は小学校配当漢字で形を認識しやすい。"
+  },
+  {
+    "id": "tree_002",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "相",
+    "word": "相手",
+    "reading": "あいて",
+    "okurigana": "",
+    "meaning": "いっしょに何かをする人。",
+    "parts": [
+      "木",
+      "目"
+    ],
+    "choices": [
+      "木",
+      "目",
+      "氵",
+      "亻",
+      "車"
+    ],
+    "picture": "🤝",
+    "hint": "木と目を合わせた形だよ。",
+    "note": "送り仮名はないが、形が分かりやすく語彙として有用。"
+  },
+  {
+    "id": "tree_003",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "板",
+    "word": "板",
+    "reading": "いた",
+    "okurigana": "",
+    "meaning": "平たく切った木。",
+    "parts": [
+      "木",
+      "反"
+    ],
+    "choices": [
+      "木",
+      "反",
+      "氵",
+      "日",
+      "言"
+    ],
+    "picture": "🪵",
+    "hint": "木からできるものだよ。",
+    "note": "送り仮名はないが、木へんの意味が明確。"
+  },
+  {
+    "id": "tree_004",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "柱",
+    "word": "柱",
+    "reading": "はしら",
+    "okurigana": "",
+    "meaning": "家などを支える太い木や材料。",
+    "parts": [
+      "木",
+      "主"
+    ],
+    "choices": [
+      "木",
+      "主",
+      "氵",
+      "亻",
+      "日"
+    ],
+    "picture": "🏛️",
+    "hint": "木でできた支えるものをイメージしよう。",
+    "note": "送り仮名はないが、部首の意味が分かりやすい。"
+  },
+  {
+    "id": "tree_005",
+    "seriesId": "tree",
+    "seriesName": "木シリーズ",
+    "radical": "木",
+    "grade": 3,
+    "kanji": "根",
+    "word": "根づく",
+    "reading": "ねづく",
+    "okurigana": "づく",
+    "meaning": "植物の根がしっかりつく。",
+    "parts": [
+      "木",
+      "艮"
+    ],
+    "choices": [
+      "木",
+      "艮",
+      "氵",
+      "言",
+      "日"
+    ],
+    "picture": "🌳",
+    "hint": "木や植物の下にある部分だよ。",
+    "note": "艮は難しいため、初期は形合わせ中心にする。"
+  },
+  {
+    "id": "move_001",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 2,
+    "kanji": "近",
+    "word": "近い",
+    "reading": "ちかい",
+    "okurigana": "い",
+    "meaning": "距離や時間が短い。",
+    "parts": [
+      "辶",
+      "斤"
+    ],
+    "choices": [
+      "辶",
+      "斤",
+      "亻",
+      "氵",
+      "木"
+    ],
+    "picture": "📍",
+    "hint": "しんにょうは進む・移動に関係することが多いよ。",
+    "note": "斤は形の手がかりとして扱う。"
+  },
+  {
+    "id": "move_002",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "返",
+    "word": "返す",
+    "reading": "かえす",
+    "okurigana": "す",
+    "meaning": "元の場所や人に戻す。",
+    "parts": [
+      "辶",
+      "反"
+    ],
+    "choices": [
+      "辶",
+      "反",
+      "亻",
+      "言",
+      "日"
+    ],
+    "picture": "↩️",
+    "hint": "戻る動きのイメージだよ。",
+    "note": "反は形の手がかりとして扱う。"
+  },
+  {
+    "id": "move_003",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "送",
+    "word": "送る",
+    "reading": "おくる",
+    "okurigana": "る",
+    "meaning": "人や物を別の場所へ行かせる。",
+    "parts": [
+      "辶",
+      "关"
+    ],
+    "choices": [
+      "辶",
+      "关",
+      "亻",
+      "氵",
+      "木"
+    ],
+    "picture": "📦",
+    "hint": "物を動かして届けるイメージだよ。",
+    "note": "右側は形の手がかりとして扱う。"
+  },
+  {
+    "id": "move_004",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "進",
+    "word": "進む",
+    "reading": "すすむ",
+    "okurigana": "む",
+    "meaning": "前の方へ動く。",
+    "parts": [
+      "辶",
+      "隹"
+    ],
+    "choices": [
+      "辶",
+      "隹",
+      "亻",
+      "日",
+      "木"
+    ],
+    "picture": "➡️",
+    "hint": "前へ進む動きのイメージだよ。",
+    "note": "隹は難しいため、初期は形合わせ中心にする。"
+  },
+  {
+    "id": "move_005",
+    "seriesId": "move",
+    "seriesName": "移動シリーズ",
+    "radical": "辶",
+    "grade": 3,
+    "kanji": "運",
+    "word": "運ぶ",
+    "reading": "はこぶ",
+    "okurigana": "ぶ",
+    "meaning": "物を別の場所へ持っていく。",
+    "parts": [
+      "辶",
+      "軍"
+    ],
+    "choices": [
+      "辶",
+      "軍",
+      "亻",
+      "氵",
+      "言"
+    ],
+    "picture": "🚚",
+    "hint": "物が移動するイメージだよ。",
+    "note": "軍は小学校配当漢字で形を認識しやすい。"
+  }
+];
+
+    const seriesOrder = [...new Map(questions.map((question) => [question.seriesId, {
+      id: question.seriesId,
+      name: question.seriesName,
+      radical: question.radical
+    }])).values()];
+
+    const makeInitialAnswers = () => questions.map(() => ({
+      selectedParts: [],
+      status: "unanswered",
+      answered: false
+    }));
+
+    let answers = makeInitialAnswers();
+    let activeQueue = [];
+    let currentQueuePosition = 0;
+    let activeTitle = "";
+    let baseQueue = [];
+
+    const $ = (id) => document.getElementById(id);
+    const seriesScreen = $("seriesScreen");
+    const gameScreen = $("gameScreen");
+    const summaryScreen = $("summaryScreen");
+
+    function showOnly(screen) {
+      [seriesScreen, gameScreen, summaryScreen].forEach((item) => item.classList.toggle("hidden", item !== screen));
+    }
+
+    function indexesForSeries(seriesId) {
+      return questions.map((question, index) => ({ question, index }))
+        .filter(({ question }) => question.seriesId === seriesId)
+        .map(({ index }) => index);
+    }
+
+    function countStatus(indexes, status) {
+      return indexes.filter((index) => answers[index].status === status).length;
+    }
+
+    function isSeriesComplete(seriesId) {
+      const indexes = indexesForSeries(seriesId);
+      return indexes.length > 0 && indexes.every((index) => answers[index].status === "correct");
+    }
+
+    function renderSeriesScreen() {
+      showOnly(seriesScreen);
+      const grid = $("seriesGrid");
+      grid.replaceChildren();
+
+      seriesOrder.forEach((series) => {
+        const indexes = indexesForSeries(series.id);
+        const correct = countStatus(indexes, "correct");
+        const complete = isSeriesComplete(series.id);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `series-button${complete ? " complete" : ""}`;
+        button.innerHTML = `
+          <span class="series-top">
+            <span class="series-name">${series.name}</span>
+            <span class="series-radical">${series.radical}</span>
+          </span>
+          <span class="series-progress">正解 ${correct} / ${indexes.length}</span>
+          ${complete ? '<span class="badge-mark">★ 達成！</span>' : ""}
+        `;
+        button.addEventListener("click", () => startSeries(series.id, series.name));
+        grid.appendChild(button);
+      });
+    }
+
+    function startSeries(seriesId, title) {
+      baseQueue = indexesForSeries(seriesId);
+      activeQueue = [...baseQueue];
+      activeTitle = title;
+      currentQueuePosition = 0;
+      renderGame();
+    }
+
+    function startAllQuestions() {
+      baseQueue = questions.map((_, index) => index);
+      activeQueue = [...baseQueue];
+      activeTitle = "ぜんぶの問題";
+      currentQueuePosition = 0;
+      renderGame();
+    }
+
+    function currentQuestionIndex() {
+      return activeQueue[currentQueuePosition];
+    }
+
+    function renderGame() {
+      showOnly(gameScreen);
+      const index = currentQuestionIndex();
+      const question = questions[index];
+      const state = answers[index];
+
+      $("questionMeta").textContent = `${activeTitle}　${currentQueuePosition + 1} / ${activeQueue.length} 問`;
+      $("meterFill").style.width = `${((currentQueuePosition + 1) / activeQueue.length) * 100}%`;
+      $("scoreText").textContent = `スコア ${countStatus(activeQueue, "correct")} / ${activeQueue.length}`;
+      $("readingText").textContent = question.reading;
+      $("gradeText").textContent = `小学${question.grade}年生　${question.seriesName}`;
+      $("slotA").textContent = state.selectedParts[0] || "?";
+      $("slotB").textContent = state.selectedParts[1] || "?";
+
+      const choices = $("choices");
+      choices.replaceChildren();
+      question.choices.forEach((part) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `part-button${state.selectedParts.includes(part) ? " selected" : ""}`;
+        button.textContent = part;
+        button.disabled = state.status === "correct";
+        button.setAttribute("aria-label", `${part}を選ぶ`);
+        button.addEventListener("click", () => selectPart(part));
+        choices.appendChild(button);
+      });
+
+      $("backButton").disabled = currentQueuePosition === 0;
+      $("checkButton").disabled = state.status === "correct";
+      $("skipButton").disabled = state.status === "correct";
+      $("nextButton").textContent = currentQueuePosition === activeQueue.length - 1 ? "結果へ" : "つぎへ";
+      renderFeedback();
+    }
+
+    function renderFeedback() {
+      const question = questions[currentQuestionIndex()];
+      const state = answers[currentQuestionIndex()];
+      const box = $("feedback");
+      const main = $("feedbackMain");
+      const sub = $("feedbackSub");
+      box.className = "feedback";
+
+      if (state.status === "correct") {
+        box.classList.add("correct");
+        main.innerHTML = `
+          <span class="answer-line answer-kanji">${question.kanji}</span>
+          <span class="answer-line answer-word">${question.word}</span>
+          <span class="answer-line answer-reading">${question.reading}</span>
+          <span class="answer-line answer-meaning">${question.meaning}</span>
+          <span class="answer-line answer-picture">${question.picture}</span>
+          <span class="answer-note">${question.note}</span>
+        `;
+        sub.textContent = "";
+      } else if (state.status === "wrong") {
+        box.classList.add("wrong");
+        main.textContent = "もう一度考えてみよう";
+        sub.textContent = question.hint;
+      } else if (state.status === "skipped") {
+        main.textContent = "あとでまたやってみよう";
+        sub.textContent = question.hint;
+      } else {
+        main.textContent = "パーツを選んでみよう";
+        sub.textContent = "2つ選んだら「こたえあわせ」を押してね。";
+      }
+    }
+
+    function selectPart(part) {
+      const state = answers[currentQuestionIndex()];
+      if (state.status === "correct") return;
+      if (state.selectedParts.includes(part)) {
+        state.selectedParts = state.selectedParts.filter((item) => item !== part);
+      } else if (state.selectedParts.length < 2) {
+        state.selectedParts.push(part);
+      } else {
+        state.selectedParts = [state.selectedParts[1], part];
+      }
+      if (state.status !== "correct") {
+        state.status = "unanswered";
+        state.answered = false;
+      }
+      renderGame();
+    }
+
+    function checkAnswer() {
+      const question = questions[currentQuestionIndex()];
+      const state = answers[currentQuestionIndex()];
+      if (state.selectedParts.length !== 2) {
+        $("feedback").className = "feedback wrong";
+        $("feedbackMain").textContent = "パーツを2つ選んでね";
+        $("feedbackSub").textContent = "候補から、組み合わせたいパーツを選ぼう。";
+        return;
+      }
+
+      state.answered = true;
+      const isCorrect = question.parts.every((part) => state.selectedParts.includes(part));
+      state.status = isCorrect ? "correct" : "wrong";
+      playSound(isCorrect ? "correct" : "wrong");
+      renderGame();
+    }
+
+    function skipQuestion() {
+      const state = answers[currentQuestionIndex()];
+      state.status = "skipped";
+      state.answered = false;
+      goNext();
+    }
+
+    function resetCurrent() {
+      answers[currentQuestionIndex()] = { selectedParts: [], status: "unanswered", answered: false };
+      renderGame();
+    }
+
+    function goBack() {
+      if (currentQueuePosition > 0) {
+        currentQueuePosition -= 1;
+        renderGame();
+      }
+    }
+
+    function goNext() {
+      if (currentQueuePosition < activeQueue.length - 1) {
+        currentQueuePosition += 1;
+        renderGame();
+      } else {
+        showSummary();
+      }
+    }
+
+    function pendingIndexes(indexes) {
+      return indexes.filter((index) => ["wrong", "skipped", "unanswered"].includes(answers[index].status));
+    }
+
+    function showSummary() {
+      showOnly(summaryScreen);
+      $("summaryTitle").textContent = activeTitle;
+      $("correctCount").textContent = countStatus(activeQueue, "correct");
+      $("wrongCount").textContent = countStatus(activeQueue, "wrong");
+      $("skippedCount").textContent = countStatus(activeQueue, "skipped");
+      $("unansweredCount").textContent = countStatus(activeQueue, "unanswered");
+
+      const pending = pendingIndexes(activeQueue);
+      $("retryButton").disabled = pending.length === 0;
+      renderBadges();
+      renderReviewList(pending);
+    }
+
+    function renderBadges() {
+      const grid = $("badgeGrid");
+      grid.replaceChildren();
+      seriesOrder.forEach((series) => {
+        const complete = isSeriesComplete(series.id);
+        const item = document.createElement("div");
+        item.className = `badge-item${complete ? " complete" : ""}`;
+        item.innerHTML = `<span class="badge-icon">${complete ? "★" : "☆"}</span>${series.name}`;
+        grid.appendChild(item);
+      });
+    }
+
+    function renderReviewList(pending) {
+      const list = $("reviewList");
+      list.replaceChildren();
+      if (pending.length === 0) {
+        const message = document.createElement("p");
+        message.className = "feedback-sub";
+        message.textContent = "復習する問題はありません。よくがんばりました。";
+        list.appendChild(message);
+        return;
+      }
+
+      const labels = { wrong: "不正解", skipped: "わからない", unanswered: "未回答" };
+      pending.forEach((index) => {
+        const question = questions[index];
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "review-button";
+        button.textContent = `${question.seriesName}：${question.reading}（${labels[answers[index].status]}）`;
+        button.addEventListener("click", () => startReviewAt(pending, index));
+        list.appendChild(button);
+      });
+    }
+
+    function startReviewAt(pending, firstIndex) {
+      activeQueue = [...pending];
+      activeTitle = "復習モード";
+      currentQueuePosition = activeQueue.indexOf(firstIndex);
+      renderGame();
+    }
+
+    function startReview() {
+      const pending = pendingIndexes(activeQueue);
+      if (pending.length > 0) startReviewAt(pending, pending[0]);
+    }
+
+    function replayCurrentSet() {
+      baseQueue.forEach((index) => {
+        answers[index] = { selectedParts: [], status: "unanswered", answered: false };
+      });
+      activeQueue = [...baseQueue];
+      currentQueuePosition = 0;
+      renderGame();
+    }
+
+    function playSound(type) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const context = new AudioContext();
+      const gain = context.createGain();
+      gain.connect(context.destination);
+      const tones = type === "correct"
+        ? [[523.25, 0, 0.13, 0.15], [659.25, 0.11, 0.15, 0.13], [783.99, 0.24, 0.22, 0.11]]
+        : [[329.63, 0, 0.14, 0.07], [293.66, 0.13, 0.16, 0.05]];
+      tones.forEach(([frequency, start, duration, volume]) => playTone(context, gain, frequency, start, duration, volume));
+      setTimeout(() => context.close(), 700);
+    }
+
+    function playTone(context, gain, frequency, start, duration, volume) {
+      const oscillator = context.createOscillator();
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+      oscillator.connect(gain);
+      gain.gain.setValueAtTime(volume, context.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + start + duration);
+      oscillator.start(context.currentTime + start);
+      oscillator.stop(context.currentTime + start + duration);
+    }
+
+    $("allQuestionsButton").addEventListener("click", startAllQuestions);
+    $("checkButton").addEventListener("click", checkAnswer);
+    $("skipButton").addEventListener("click", skipQuestion);
+    $("backButton").addEventListener("click", goBack);
+    $("nextButton").addEventListener("click", goNext);
+    $("resetButton").addEventListener("click", resetCurrent);
+    $("retryButton").addEventListener("click", startReview);
+    $("replayButton").addEventListener("click", replayCurrentSet);
+    $("seriesButton").addEventListener("click", renderSeriesScreen);
+
+    renderSeriesScreen();
+  </script>
+</body>
+</html>
+
