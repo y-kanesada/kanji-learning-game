@@ -76,6 +76,25 @@
       gap: 12px;
     }
 
+    .grade-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .grade-button {
+      min-height: 82px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: #fff;
+      background: var(--accent);
+      font-size: clamp(21px, 5vw, 27px);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--accent-dark);
+    }
+
     .series-button {
       min-height: 130px;
       padding: 18px;
@@ -239,7 +258,12 @@
 
     <section class="panel" id="seriesScreen">
       <h2 class="screen-heading">シリーズをえらぼう</h2>
-      <p class="screen-lead">部首ごとに5問ずつチャレンジしよう。</p>
+      <p class="screen-lead">学年または部首をえらんでチャレンジしよう。</p>
+      <div class="grade-grid">
+        <button class="grade-button" id="grade5Button" type="button">小学5年の問題</button>
+        <button class="grade-button" id="grade6Button" type="button">小学6年の問題</button>
+      </div>
+      <p class="section-title">部首からえらぶ</p>
       <div class="series-grid" id="seriesGrid"></div>
       <button class="wide-button secondary" id="allQuestionsButton" type="button">ぜんぶの問題に挑戦</button>
       <button class="wide-button secondary hidden" id="resumeButton" type="button">ゲームにもどる</button>
@@ -1101,6 +1125,151 @@
   }
 ];
 
+    const upperGradeQuestions = [
+      {
+        id: "person_006", seriesId: "person", seriesName: "にんべん", radical: "亻", grade: 5,
+        kanji: "似", word: "似る", reading: "にる", okurigana: "る",
+        meaning: "形やようすが同じように見える。", parts: ["亻", "以"],
+        choices: ["亻", "以", "木", "言", "青"], picture: "👥",
+        hint: "人に関係するにんべんと、以を合わせるよ。", note: "似ているところを見つけて比べる言葉だよ。"
+      },
+      {
+        id: "person_007", seriesId: "person", seriesName: "にんべん", radical: "亻", grade: 5,
+        kanji: "修", word: "修める", reading: "おさめる", okurigana: "める",
+        meaning: "学問や技術を身につける。", parts: ["亻", "攸"],
+        choices: ["亻", "攸", "木", "反", "主"], picture: "📚",
+        hint: "にんべんと、右側の攸を合わせるよ。", note: "学習を修める、身を修めるなどと使うよ。"
+      },
+      {
+        id: "water_006", seriesId: "water", seriesName: "さんずい", radical: "氵", grade: 5,
+        kanji: "液", word: "液体", reading: "えきたい", okurigana: "",
+        meaning: "水のように流れる物質。", parts: ["氵", "夜"],
+        choices: ["氵", "夜", "日", "木", "言"], picture: "🧪💧",
+        hint: "液体に関係するさんずいと、夜を合わせるよ。", note: "水やジュースなど、流れるものを表す言葉だよ。"
+      },
+      {
+        id: "water_007", seriesId: "water", seriesName: "さんずい", radical: "氵", grade: 5,
+        kanji: "潔", word: "潔い", reading: "いさぎよい", okurigana: "い",
+        meaning: "心や行いがきっぱりとして、汚れがない。", parts: ["氵", "絜"],
+        choices: ["氵", "絜", "青", "先", "毎"], picture: "✨💧",
+        hint: "きれいさに関係するさんずいと、絜を合わせるよ。", note: "清潔の潔としても使うよ。"
+      },
+      {
+        id: "word_006", seriesId: "word", seriesName: "ごんべん", radical: "言", grade: 5,
+        kanji: "講", word: "講義", reading: "こうぎ", okurigana: "",
+        meaning: "人に分かるように内容を説明すること。", parts: ["言", "冓"],
+        choices: ["言", "冓", "吾", "売", "十"], picture: "🧑‍🏫",
+        hint: "言葉に関係するごんべんと、冓を合わせるよ。", note: "講演、講堂、講習などにも使うよ。"
+      },
+      {
+        id: "word_007", seriesId: "word", seriesName: "ごんべん", radical: "言", grade: 5,
+        kanji: "護", word: "保護", reading: "ほご", okurigana: "",
+        meaning: "危険や傷から守ること。", parts: ["言", "蒦"],
+        choices: ["言", "蒦", "青", "反", "主"], picture: "🛡️",
+        hint: "ごんべんと、右側の蒦を合わせるよ。", note: "保護者や救護という言葉にも使うよ。"
+      },
+      {
+        id: "sun_006", seriesId: "sun", seriesName: "ひへん", radical: "日", grade: 5,
+        kanji: "易", word: "易しい", reading: "やさしい", okurigana: "しい",
+        meaning: "むずかしくなく、分かりやすい。", parts: ["日", "勿"],
+        choices: ["日", "勿", "月", "青", "十"], picture: "🙂📘",
+        hint: "上の日と、下側の勿を合わせるよ。", note: "容易や簡易では『イ』と読むよ。"
+      },
+      {
+        id: "tree_006", seriesId: "tree", seriesName: "きへん", radical: "木", grade: 5,
+        kanji: "構", word: "構える", reading: "かまえる", okurigana: "える",
+        meaning: "形や準備を整える。", parts: ["木", "冓"],
+        choices: ["木", "冓", "直", "反", "主"], picture: "🏗️",
+        hint: "きへんと、右側の冓を合わせるよ。", note: "構造、構成、心構えなどにも使うよ。"
+      },
+      {
+        id: "tree_007", seriesId: "tree", seriesName: "きへん", radical: "木", grade: 5,
+        kanji: "検", word: "検査", reading: "けんさ", okurigana: "",
+        meaning: "よく調べて、正しいか確かめること。", parts: ["木", "僉"],
+        choices: ["木", "僉", "目", "主", "反"], picture: "🔍",
+        hint: "きへんと、右側の僉を合わせるよ。", note: "点検、検討、検温などにも使うよ。"
+      },
+      {
+        id: "move_006", seriesId: "move", seriesName: "しんにょう", radical: "辶", grade: 5,
+        kanji: "逆", word: "逆らう", reading: "さからう", okurigana: "らう",
+        meaning: "流れや命令と反対の方向へ進む。", parts: ["辶", "屰"],
+        choices: ["辶", "屰", "反", "斤", "軍"], picture: "↔️",
+        hint: "移動に関係するしんにょうと、屰を合わせるよ。", note: "逆転、逆方向、逆さまなどにも使うよ。"
+      },
+      {
+        id: "person_008", seriesId: "person", seriesName: "にんべん", radical: "亻", grade: 6,
+        kanji: "優", word: "優しい", reading: "やさしい", okurigana: "しい",
+        meaning: "思いやりがあり、おだやかである。", parts: ["亻", "憂"],
+        choices: ["亻", "憂", "主", "動", "木"], picture: "🤝💗",
+        hint: "人に関係するにんべんと、憂を合わせるよ。", note: "優秀、優勝では『ユウ』と読むよ。"
+      },
+      {
+        id: "person_009", seriesId: "person", seriesName: "にんべん", radical: "亻", grade: 6,
+        kanji: "供", word: "供える", reading: "そなえる", okurigana: "える",
+        meaning: "神仏や大切な人の前に物を差し出す。", parts: ["亻", "共"],
+        choices: ["亻", "共", "主", "攸", "以"], picture: "🌸🙏",
+        hint: "にんべんと、いっしょを表す共を合わせるよ。", note: "子供の供としても使うよ。"
+      },
+      {
+        id: "water_008", seriesId: "water", seriesName: "さんずい", radical: "氵", grade: 6,
+        kanji: "激", word: "激しい", reading: "はげしい", okurigana: "しい",
+        meaning: "勢いがとても強い。", parts: ["氵", "敫"],
+        choices: ["氵", "敫", "夜", "朝", "先"], picture: "🌊⚡",
+        hint: "さんずいと、右側の敫を合わせるよ。", note: "激流、激変、感激などにも使うよ。"
+      },
+      {
+        id: "water_009", seriesId: "water", seriesName: "さんずい", radical: "氵", grade: 6,
+        kanji: "潮", word: "潮", reading: "しお", okurigana: "",
+        meaning: "海の水や、その満ち引き。", parts: ["氵", "朝"],
+        choices: ["氵", "朝", "夜", "毎", "青"], picture: "🌊🌙",
+        hint: "海水に関係するさんずいと、朝を合わせるよ。", note: "満潮、干潮、潮風などにも使うよ。"
+      },
+      {
+        id: "word_008", seriesId: "word", seriesName: "ごんべん", radical: "言", grade: 6,
+        kanji: "誠", word: "誠", reading: "まこと", okurigana: "",
+        meaning: "うそや偽りのない、まごころ。", parts: ["言", "成"],
+        choices: ["言", "成", "忍", "吾", "己"], picture: "🤲✨",
+        hint: "言葉に関係するごんべんと、成を合わせるよ。", note: "誠実という言葉にも使うよ。"
+      },
+      {
+        id: "word_009", seriesId: "word", seriesName: "ごんべん", radical: "言", grade: 6,
+        kanji: "認", word: "認める", reading: "みとめる", okurigana: "める",
+        meaning: "確かだと判断したり、よいと受け入れたりする。", parts: ["言", "忍"],
+        choices: ["言", "忍", "成", "吾", "売"], picture: "✅👀",
+        hint: "ごんべんと、忍を合わせるよ。", note: "確認、承認、認識などにも使うよ。"
+      },
+      {
+        id: "sun_007", seriesId: "sun", seriesName: "ひへん", radical: "日", grade: 6,
+        kanji: "晩", word: "晩", reading: "ばん", okurigana: "",
+        meaning: "日が暮れてからの時間。", parts: ["日", "免"],
+        choices: ["日", "免", "月", "央", "青"], picture: "🌆",
+        hint: "日を表すパーツと、免を合わせるよ。", note: "今晩、毎晩、晩ご飯などに使うよ。"
+      },
+      {
+        id: "tree_008", seriesId: "tree", seriesName: "きへん", radical: "木", grade: 6,
+        kanji: "樹", word: "樹木", reading: "じゅもく", okurigana: "",
+        meaning: "地面に根を張って育つ木。", parts: ["木", "尌"],
+        choices: ["木", "尌", "直", "僉", "主"], picture: "🌳",
+        hint: "きへんと、右側の尌を合わせるよ。", note: "樹林や街路樹という言葉にも使うよ。"
+      },
+      {
+        id: "tree_009", seriesId: "tree", seriesName: "きへん", radical: "木", grade: 6,
+        kanji: "枚", word: "枚", reading: "まい", okurigana: "",
+        meaning: "紙や皿など、平たいものを数える言葉。", parts: ["木", "攵"],
+        choices: ["木", "攵", "反", "目", "直"], picture: "📄",
+        hint: "きへんと、右側の攵を合わせるよ。", note: "一枚、二枚のように数えるときに使うよ。"
+      },
+      {
+        id: "move_007", seriesId: "move", seriesName: "しんにょう", radical: "辶", grade: 6,
+        kanji: "遺", word: "遺産", reading: "いさん", okurigana: "",
+        meaning: "後に残された財産や品物。", parts: ["辶", "貴"],
+        choices: ["辶", "貴", "軍", "斤", "反"], picture: "📜🏠",
+        hint: "しんにょうと、貴を合わせるよ。", note: "遺跡、遺伝、遺失などにも使うよ。"
+      }
+    ];
+
+    questions.push(...upperGradeQuestions);
+
     const seriesDefinitions = {
       person: { name: "にんべん", meaning: "人や、人の行動に関係する部首だよ。" },
       water: { name: "さんずい", meaning: "水や液体に関係する部首だよ。" },
@@ -1140,7 +1309,27 @@
       move_002: "反は、向きをかえることを表す字。元へ返す動きにつながるよ。",
       move_003: "关は、送の内側の形を作るパーツ。形の手がかりとして覚えよう。",
       move_004: "隹は、尾の短い鳥を表す字。進では音と形の手がかりになるよ。",
-      move_005: "軍は、兵士の集まりを表す字。運では音と形の手がかりになるよ。"
+      move_005: "軍は、兵士の集まりを表す字。運では音と形の手がかりになるよ。",
+      person_006: "以は、『もちいる』『〜によって』という意味をもつ字。似では音と形の手がかりになるよ。",
+      person_007: "攸は、修の音と形を伝える手がかりになるパーツだよ。",
+      water_006: "夜は、日がしずんで暗い時間を表す字。液では音と形の手がかりになるよ。",
+      water_007: "絜は、束ねて整える意味をもつ字。潔では音と形の手がかりになるよ。",
+      word_006: "冓は、木などを組み合わせる形を表すパーツ。講では音と形の手がかりになるよ。",
+      word_007: "蒦は、手でつかまえる形に由来するパーツ。護では音と形の手がかりになるよ。",
+      sun_006: "勿は、『〜してはいけない』という意味を表す字。易では形の手がかりとして見よう。",
+      tree_006: "冓は、材料を組み合わせる形を表すパーツ。構の意味にもつながるよ。",
+      tree_007: "僉は、みんな・そろってという意味をもつ字。検では音と形の手がかりになるよ。",
+      move_006: "屰は、反対向きに進む形を表す古いパーツ。逆の意味につながるよ。",
+      person_008: "憂は、心配したり思いをめぐらせたりすることを表す字だよ。",
+      person_009: "共は、いっしょ・ともにという意味を表す字。供では音と形の手がかりになるよ。",
+      water_008: "敫は、強く働きかける形をもつパーツ。激では音と勢いの手がかりになるよ。",
+      water_009: "朝は、夜が明けてから昼までの時間を表す字。潮では音の手がかりになるよ。",
+      word_008: "成は、できあがる・なしとげることを表す字。誠では音の手がかりになるよ。",
+      word_009: "忍は、つらいことをこらえる意味を表す字。認では音と形の手がかりになるよ。",
+      sun_007: "免は、のがれる・ゆるされる意味を表す字。晩では音と形の手がかりになるよ。",
+      tree_008: "尌は、立てる意味をもつ古いパーツ。樹では音と形の手がかりになるよ。",
+      tree_009: "攵は、手に道具を持って動かす形からできたパーツだよ。",
+      move_007: "貴は、大切で価値が高いことを表す字。遺では音と形の手がかりになるよ。"
     };
 
     questions.forEach((question) => {
@@ -1235,6 +1424,18 @@
       baseQueue = questions.map((_, index) => index);
       activeQueue = [...baseQueue];
       activeTitle = "ぜんぶの問題";
+      currentQueuePosition = 0;
+      renderGame();
+    }
+
+    function startGrade(grade) {
+      seriesReturnTarget = null;
+      baseQueue = questions
+        .map((question, index) => ({ question, index }))
+        .filter(({ question }) => question.grade === grade)
+        .map(({ index }) => index);
+      activeQueue = [...baseQueue];
+      activeTitle = `小学${grade}年の問題`;
       currentQueuePosition = 0;
       renderGame();
     }
@@ -1488,6 +1689,8 @@
     }
 
     $("allQuestionsButton").addEventListener("click", startAllQuestions);
+    $("grade5Button").addEventListener("click", () => startGrade(5));
+    $("grade6Button").addEventListener("click", () => startGrade(6));
     $("resumeButton").addEventListener("click", returnFromSeriesScreen);
     $("checkButton").addEventListener("click", checkAnswer);
     $("skipButton").addEventListener("click", skipQuestion);
