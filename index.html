@@ -230,6 +230,9 @@
     .answer-note { display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 17px; font-weight: 700; }
     .answer-parts { display: grid; gap: 6px; margin-top: 14px; padding: 14px; border-radius: 8px; color: var(--ink); background: rgba(255, 255, 255, 0.72); font-size: 17px; font-weight: 700; text-align: left; }
     .answer-parts-title { color: var(--accent-dark); font-weight: 800; }
+    .answer-part-role { color: var(--accent-dark); }
+    .answer-origin { display: block; margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--line); }
+    .answer-origin-title { color: var(--accent-dark); }
 
     .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
     .summary-item { padding: 16px 10px; border: 2px solid var(--line); border-radius: 8px; background: #fff; text-align: center; font-size: 17px; font-weight: 800; }
@@ -424,6 +427,76 @@
       .actions { grid-template-columns: repeat(6, minmax(0, 1fr)); }
       .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
+
+    /* iPad 第10世代など、タブレットを横向きにしたときの学習画面 */
+    @media (orientation: landscape) and (min-width: 900px) and (max-height: 900px) {
+      .game-active #gameScreen {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        grid-template-areas:
+          "top top"
+          "prompt feedback"
+          "work feedback"
+          "actions feedback";
+        column-gap: 12px;
+        row-gap: 8px;
+        padding: 10px;
+      }
+
+      .game-active .game-topbar { grid-area: top; }
+      .game-active .prompt { grid-area: prompt; }
+      .game-active .work-area {
+        grid-area: work;
+        grid-template-columns: 1fr;
+        align-content: start;
+        gap: 8px;
+        min-height: 0;
+      }
+      .game-active .actions { grid-area: actions; }
+      .game-active .feedback {
+        grid-area: feedback;
+        min-height: 0;
+        padding: 12px;
+        align-content: center;
+      }
+
+      .game-active .prompt-label { font-size: 14px; }
+      .game-active .reading { font-size: clamp(30px, 4.4vw, 46px); }
+      .game-active .grade-label { font-size: 13px; }
+      .game-active .part-button { min-height: 50px; font-size: 32px; }
+      .game-active .slot { min-height: 66px; font-size: 38px; }
+      .game-active .action-button { min-height: 46px; font-size: 13px; }
+
+      .game-active .feedback.correct {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .game-active .feedback.correct .feedback-main {
+        grid-template-columns: minmax(110px, 0.72fr) minmax(0, 1.7fr);
+        grid-template-rows: auto auto auto auto;
+        column-gap: 14px;
+      }
+
+      .game-active .answer-kanji {
+        grid-column: 1;
+        grid-row: 1 / 4;
+        font-size: clamp(92px, 12vw, 138px);
+      }
+
+      .game-active .answer-word { font-size: clamp(34px, 4.5vw, 52px); }
+      .game-active .answer-reading { font-size: clamp(22px, 2.8vw, 31px); }
+      .game-active .answer-meaning { grid-row: 3; font-size: clamp(17px, 2vw, 22px); }
+      .game-active .answer-picture { grid-column: 1; grid-row: 4; font-size: 42px; }
+      .game-active .answer-parts {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        margin: 0 0 0 125px;
+        padding: 10px 12px;
+        font-size: clamp(14px, 1.6vw, 18px);
+        line-height: 1.38;
+      }
+    }
   </style>
 </head>
 <body>
@@ -593,7 +666,7 @@
     ],
     "picture": "🛠️",
     "hint": "人が何かをつくるイメージだよ。",
-    "note": "乍は意味説明よりも形の手がかりとして扱う。"
+    "note": "乍は、作の音を表す音符として働く。"
   },
   {
     "id": "person_004",
@@ -1453,57 +1526,57 @@
       move: { name: "しんにょう", meaning: "進むことや移動に関係する部首だよ。" }
     };
 
-    const otherPartMeanings = {
-      person_001: "木は、樹木を表すパーツ。人が木のそばで休む形だよ。",
-      person_002: "主は、中心になる人やものを表す字。住では音と形の手がかりにもなるよ。",
-      person_003: "乍は、作の音と形を伝える手がかりになるパーツだよ。",
-      person_004: "吏は、役人を表す字。使では音と形の手がかりになるよ。",
-      person_005: "動は、うごくことを表す字。人が動いて仕事をするイメージだよ。",
-      water_001: "也は、『なり』などと読む字。池では音と形の手がかりになるよ。",
-      water_002: "毎は、いつも・そのたびごとを表す字。海では音と形の手がかりになるよ。",
-      water_003: "肖は、姿が似ることを表す字。消では音と形の手がかりになるよ。",
-      water_004: "㐬は、水が流れる形と音の手がかりになるパーツだよ。",
-      water_005: "先は、前やさきのことを表す字。洗では音と形の手がかりになるよ。",
-      word_001: "舌は、口の中にあり、話すときに使う部分だよ。",
-      word_002: "売は、ものをうることを表す字。読では音と形の手がかりになるよ。",
-      word_003: "己は、自分のことを表す字。記では音と形の手がかりになるよ。",
-      word_004: "吾は、自分・わたしを表す字。語では音と形の手がかりになるよ。",
-      word_005: "十は、数の10を表す字。計の形を作るパーツだよ。",
-      sun_001: "月は、夜空に見える月を表す字。日と月を合わせて明るさを表すよ。",
-      sun_002: "青は、青い色を表す字。太陽と青空で晴れをイメージできるよ。",
-      sun_003: "央は、まんなかを表す字。映では音と形の手がかりになるよ。",
-      sun_004: "爰は、暖の音と形を伝える手がかりになるパーツだよ。",
-      sun_005: "十は、数の10を表す字。早では下側の形を作るパーツだよ。",
-      tree_001: "直は、まっすぐなことを表す字。植では音と形の手がかりになるよ。",
-      tree_002: "目は、ものを見る目を表す字。木と目を合わせた形だよ。",
-      tree_003: "反は、反対や、向きをかえることを表す字。板では音と形の手がかりになるよ。",
-      tree_004: "主は、中心になるものを表す字。柱は建物の中心を支えるものだよ。",
-      tree_005: "艮は、根の音と形を伝える手がかりになるパーツだよ。",
-      move_001: "斤は、おのや重さの単位を表す字。近では音と形の手がかりになるよ。",
-      move_002: "反は、向きをかえることを表す字。元へ返す動きにつながるよ。",
-      move_003: "車は、人や物を乗せて動く車を表す字。連では音と形の手がかりになるよ。",
-      move_004: "隹は、尾の短い鳥を表す字。進では音と形の手がかりになるよ。",
-      move_005: "軍は、兵士の集まりを表す字。運では音と形の手がかりになるよ。",
-      person_006: "以は、『もちいる』『〜によって』という意味をもつ字。似では音と形の手がかりになるよ。",
-      person_007: "反は、向きが反対になることを表す字。仮では音と形の手がかりになるよ。",
-      water_006: "夜は、日がしずんで暗い時間を表す字。液では音と形の手がかりになるよ。",
-      water_007: "可は、できる・してもよいという意味を表す字。河では音と形の手がかりになるよ。",
-      word_006: "午は、昼の十二時ごろや、十二支のうまを表す字。許では音と形の手がかりになるよ。",
-      word_007: "平は、たいら・かたよりがないことを表す字。評では音と形の手がかりになるよ。",
-      sun_006: "勿は、『〜してはいけない』という意味を表す字。易では形の手がかりとして見よう。",
-      tree_006: "各は、それぞれ・一つ一つという意味を表す字。格では音と形の手がかりになるよ。",
-      tree_007: "支は、ささえる・分かれることを表す字。枝の意味にもつながるよ。",
-      move_006: "米は、食べ物のお米を表す字。迷では音と形の手がかりになるよ。",
-      person_008: "憂は、心配したり思いをめぐらせたりすることを表す字だよ。",
-      person_009: "共は、いっしょ・ともにという意味を表す字。供では音と形の手がかりになるよ。",
-      water_008: "原は、広い野原や、物事のもとを表す字。源の意味にもつながるよ。",
-      water_009: "朝は、夜が明けてから昼までの時間を表す字。潮では音の手がかりになるよ。",
-      word_008: "成は、できあがる・なしとげることを表す字。誠では音の手がかりになるよ。",
-      word_009: "忍は、つらいことをこらえる意味を表す字。認では音と形の手がかりになるよ。",
-      sun_007: "免は、のがれる・ゆるされる意味を表す字。晩では音と形の手がかりになるよ。",
-      tree_008: "朱は、赤い色を表す字。株では音と形の手がかりになるよ。",
-      tree_009: "攵は、手に道具を持って動かす形からできたパーツだよ。",
-      move_007: "貴は、大切で価値が高いことを表す字。遺では音と形の手がかりになるよ。"
+    const otherPartDetails = {
+      person_001: { role: "意味を表す", text: "木を表す。人が木に寄りかかって休む形からできた漢字だよ。", origin: "人を表す亻と木を組み合わせ、人が木のそばで体を休める様子を表した。" },
+      person_002: { role: "音を表す（音符）", text: "主は、住の音を表す部分。主の『シュ』と住の『ジュウ』には音のつながりがあるよ。" },
+      person_003: { role: "音を表す（音符）", text: "乍は、作の『サク』という音を表すもとになった部分。乍の意味を足した漢字ではないよ。" },
+      person_004: { role: "音を表す（音符）", text: "吏は、使の音を表す部分。現在の日本語の読みでは音の関係が分かりにくくなっているよ。" },
+      person_005: { role: "意味を表す", text: "動は、うごくことを表す。人が体や頭を動かして仕事をする意味につながるよ。", origin: "働は日本で作られた漢字（国字）。人を表す亻と、うごくことを表す動を組み合わせた。" },
+      water_001: { role: "音を表す（音符）", text: "也は、池の音を表す部分。現在の『や』と『ち』では違って聞こえるけれど、昔の音に関係があるよ。" },
+      water_002: { role: "音を表す（音符）", text: "毎は、海の音を表す部分。毎の意味を海に足したものではないよ。" },
+      water_003: { role: "音を表す（音符）", text: "肖は、消の『ショウ』という音を表す部分。水を表す氵が意味を受け持つよ。" },
+      water_004: { role: "音を表す（音符）", text: "㐬は、流の音を表す部分。古い字形では、水が流れる様子にも関係するよ。" },
+      water_005: { role: "音を表す（音符）", text: "先は、洗の『セン』という音を表す部分。前や先という意味を足したものではないよ。" },
+      word_001: { role: "音を表す（音符）", text: "舌は、話の音を表す部分。舌を使って話すという説明だけでできた漢字ではないよ。" },
+      word_002: { role: "音を表す（音符）", text: "売は、旧字体の讀にあった賣を簡単にした形で、読の音を表す部分だよ。" },
+      word_003: { role: "音を表す（音符）", text: "己は、記の『キ』という音を表す部分。自分という意味を足したものではないよ。" },
+      word_004: { role: "音を表す（音符）", text: "吾は、語の『ゴ』という音を表す部分。言が言葉に関する意味を受け持つよ。" },
+      word_005: { role: "見た目上のパーツ", text: "下側は十に見えるけれど、数の10という意味をそのまま足したものとは考えないよ。" },
+      sun_001: { role: "意味に関係する", text: "現在の字形は日と月に分けて覚えられる。どちらも明るさを連想しやすいパーツだよ。" },
+      sun_002: { role: "音を表す（音符）", text: "青は、晴の『セイ』という音を表す部分。青空という意味を無理に足したものではないよ。" },
+      sun_003: { role: "音を表す（音符）", text: "央は、映の『エイ』という音を表す部分。まんなかという意味を足したものではないよ。" },
+      sun_004: { role: "音を表す（音符）", text: "爰は、暖の『ダン』という音を表すもとになった部分。日があたたかさの意味を受け持つよ。" },
+      sun_005: { role: "見た目上のパーツ", text: "下側は十に見えるけれど、早は一つの字として成り立ったもの。10という意味はないよ。" },
+      tree_001: { role: "音を表す（音符）", text: "直は、植の『ショク』という音を表すもとになった部分。まっすぐという意味を足したものではないよ。" },
+      tree_002: { role: "意味を表す", text: "目は、見ることを表す。木を目でよく見る形が、相手を見る・調べる意味につながったよ。", origin: "木と目を組み合わせ、木を目で見る様子を表したのが相の成り立ちとされる。" },
+      tree_003: { role: "音を表す（音符）", text: "反は、板の『ハン・バン』という音を表す部分。反対という意味を足したものではないよ。" },
+      tree_004: { role: "音を表す（音符）", text: "主は、柱の『チュウ』という音を表す部分。中心という意味を無理に結び付けないよ。" },
+      tree_005: { role: "音を表す（音符）", text: "艮は、根の『コン』という音を表す部分。木が、木の根という意味を受け持つよ。" },
+      move_001: { role: "音を表す（音符）", text: "斤は、近の『キン』という音を表す部分。おのや重さという意味を足したものではないよ。" },
+      move_002: { role: "意味に関係する", text: "反には、向きを変える・もどる意味があり、元の方へ返す動きにつながるよ。" },
+      move_003: { role: "音を表す（音符）", text: "車は、連の音を表す部分。車の意味だけを足して連になったわけではないよ。" },
+      move_004: { role: "成り立ちに複数の説がある", text: "隹は鳥を表す形。進の中での役割には複数の説明があるため、鳥は前にしか進まない、と決めつけないよ。" },
+      move_005: { role: "音を表す（音符）", text: "軍は、運の『ウン』という音を表す部分。兵士の集まりという意味を足したものではないよ。" },
+      person_006: { role: "音を表す（音符）", text: "以は、似の音を表す部分。現在の日本語の読みでは音の関係が分かりにくくなっているよ。" },
+      person_007: { role: "簡略化された形", text: "仮は旧字体では假。右の反は、假の右側を日本で簡単にした形で、反の意味を足したものではないよ。" },
+      water_006: { role: "音を表す（音符）", text: "夜は、液の『エキ』という音を表すもとになった部分。夜の意味を足したものではないよ。" },
+      water_007: { role: "音を表す（音符）", text: "可は、河の『カ』という音を表す部分。できるという意味を足したものではないよ。" },
+      word_006: { role: "音を表す（音符）", text: "午は、許の『キョ』という音を表すもとになった部分。昼やうまの意味を足したものではないよ。" },
+      word_007: { role: "音を表す（音符）", text: "平は、評の『ヒョウ』という音を表す部分。たいらという意味を足したものではないよ。" },
+      sun_006: { role: "見た目上のパーツ", text: "易は一つの漢字として成り立ったもの。日と勿に分けるのは形を覚えるためで、それぞれの意味を足すわけではないよ。" },
+      tree_006: { role: "音を表す（音符）", text: "各は、格の『カク』という音を表す部分。それぞれという意味を足したものではないよ。" },
+      tree_007: { role: "音を表す（音符）", text: "支は、枝の『シ』という音を表す部分。木が、木の枝という意味を受け持つよ。" },
+      move_006: { role: "音を表す（音符）", text: "米は、迷の『メイ』という音を表す部分。お米の意味を足したものではないよ。" },
+      person_008: { role: "音を表す（音符）", text: "憂は、優の『ユウ』という音を表す部分。心配という意味をそのまま足したものではないよ。" },
+      person_009: { role: "音を表す（音符）", text: "共は、供の『キョウ・ク』という音を表す部分。ともにという意味だけを足したものではないよ。" },
+      water_008: { role: "音を表す（音符）", text: "原は、源の『ゲン』という音を表す部分。源では、物事のもとという意味も連想しやすいね。" },
+      water_009: { role: "音を表す（音符）", text: "朝は、潮の『チョウ』という音を表す部分。朝という時間の意味を足したものではないよ。" },
+      word_008: { role: "音を表す（音符）", text: "成は、誠の『セイ』という音を表す部分。できあがるという意味を足したものではないよ。" },
+      word_009: { role: "音を表す（音符）", text: "忍は、認の『ニン』という音を表す部分。こらえるという意味を足したものではないよ。" },
+      sun_007: { role: "音を表す（音符）", text: "免は、晩の『バン』という音を表すもとになった部分。のがれるという意味を足したものではないよ。" },
+      tree_008: { role: "音を表す（音符）", text: "朱は、株の『シュ』という音を表す部分。赤い色という意味を足したものではないよ。" },
+      tree_009: { role: "意味に関係する", text: "攵は、手に道具を持って動かす形に由来する。枚では木と組み合わさった古い数え方に関係するよ。" },
+      move_007: { role: "音を表す（音符）", text: "貴は、遺の『イ』という音を表すもとになった部分。大切で高価という意味を足したものではないよ。" }
     };
 
     const compoundTargetReadings = {
@@ -1518,7 +1591,10 @@
       question.seriesName = series.name;
       question.radicalMeaning = series.meaning;
       question.otherPart = question.parts[1];
-      question.otherPartMeaning = otherPartMeanings[question.id];
+      const otherPartDetail = otherPartDetails[question.id];
+      question.otherPartRole = otherPartDetail.role;
+      question.otherPartMeaning = otherPartDetail.text;
+      question.origin = otherPartDetail.origin || "";
       const stemReading = question.okurigana && question.reading.endsWith(question.okurigana)
         ? question.reading.slice(0, -question.okurigana.length)
         : question.reading;
@@ -1724,9 +1800,10 @@
           <span class="answer-line answer-meaning">${question.meaning}</span>
           <span class="answer-line answer-picture">${question.picture}</span>
           <span class="answer-parts">
-            <span class="answer-parts-title">パーツの意味</span>
+            <span class="answer-parts-title">パーツの役割</span>
             <span>${displayPart(question.radical)}（${question.seriesName}）：${question.radicalMeaning}</span>
-            <span>${displayPart(question.otherPart)}：${question.otherPartMeaning}</span>
+            <span><span class="answer-part-role">${displayPart(question.otherPart)}［${question.otherPartRole}］</span>：${question.otherPartMeaning}</span>
+            ${question.origin ? `<span class="answer-origin"><span class="answer-origin-title">漢字の由来：</span>${question.origin}</span>` : ""}
           </span>
           <span class="answer-note">${question.note}</span>
         `;
